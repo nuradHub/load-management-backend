@@ -200,7 +200,7 @@ router.put('/update-payment', UserMiddleware, AdminMiddleware, async (req, res)=
     loan.approvedAmount = Number(loan.approvedAmount) + Number(amount)
 
     loan.status = 'approved'
-    loan.updatedAt = Date.now()
+    loan.updatedAt = new Date();
          
     await loan.save()
 
@@ -233,7 +233,8 @@ router.post('/pay-loan', UserMiddleware, async (req, res) => {
         $set: { 
           status: 'pending repayment',
           rrrNumber: rrr,
-          repaymentDate: new Date()
+          repaymentDate: new Date(),
+          updatedAt: new Date()
         }
       }
     );
@@ -256,6 +257,7 @@ router.put('/admin/verify-repayment', UserMiddleware, AdminMiddleware, async (re
 
     loan.status = 'completed';
     loan.approvedAmount = 0; 
+    loan.updatedAt = new Date();
     loan.paymentNotes = `Paid via ${paymentMethod || 'Manual Verification'}`;
 
     if(loan.creditScore >= 100){
